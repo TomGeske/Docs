@@ -101,24 +101,22 @@ Hosting Configuration
 ---------------------
 You enable configuration for your web application host by calling the ``UseConfiguration()`` method on ``WebHostBuilder`` and passing a configuration instance. The following configuration values can be specified:
 
--application
--startupAssembly
--detailedErrors
--server
--webroot
--captureStartupErrors
--server.urls
--contentRoot
+- application
+- startupAssembly
+- detailedErrors
+- server
+- webroot
+- captureStartupErrors
+- server.urls
+- contentRoot
 
-To configure hosting using environmental variables, you must add them as a configuration source, and optionally specify a prefix.
-
-ASPNETCORE_ENVIRONMENT is now how you specify the ASP.NET Core environment variable. We still support ``ASPNET_ENV`` and ``Hosting:Environment`` in RC2, but the user will see a message indicating these values are deprecated. In RC2, you can use whatever prefix you want. You should add it explicitly by calling:
+To configure hosting using environmental variables, you must add them as a configuration source, and optionally specify a prefix. In RC2, you can use whatever prefix you want. You should add it explicitly by calling:
 
 .. code-block:: c#
 
   new ConfigurationBuilder.AddEnvironmentVariables("ANY_PREFIX_YOU_WANT_").Build(); 
   
-However, there is an exception. You must set the environment key using ``ASPNETCORE_ENVIRONMENT``. This is picked up by default by the ``WebHostBuilder``, unlike the other variables. 
+However, there is an exception. You must set the environment key using ASPNETCORE_ENVIRONMENT. This is picked up by default by the WebHostBuilder, unlike the other variables. We still support ASPNET_ENV and Hosting:Environment in RC2, but the user will see a message indicating these values are deprecated.
 
 Hosting Service changes
 -----------------------
@@ -151,23 +149,7 @@ Working with IIS
 
 ``Microsoft.AspNetCore.IISPlatformHandler`` is now ``Microsoft.AspNetCore.Server.IISIntegration``.
 
-HTTP Platform Handler was replaced by ASP.NET Core Module. The ``web.config`` created by the Publish IIS tool now configures IIS to use ASP.NET Core Module instead of HttpPlatformHandler to reverse-proxy requests to Kestrel.
-
-The code snippet below shows how to configure the new Publish IIS tool in ``project.json`` file:
-
-.. code-block:: Json 
-
-  { 
-    "tools": {
-    "Microsoft.AspNetCore.Server.IISIntegration.Tools": {
-        "version": "1.0.0-*",
-        "imports": "portable-net45+wp80+win8+wpa81+dnxcore50"
-      }
-    },
-    "scripts": {
-      "postpublish": "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%"
-    } 
-  }
+HttpPlatformHandler was replaced by ASP.NET Core Module. The ``web.config`` created by the Publish IIS tool now configures IIS to use ASP.NET Core Module instead of HttpPlatformHandler to reverse-proxy requests to Kestrel.
 
 The ASP.NET Core Module must be configured in ``web.config``:
 
@@ -185,18 +167,7 @@ The ASP.NET Core Module must be configured in ``web.config``:
     </system.webServer>
   </configuration>
 
-
-The Publish IIS tool 
-^^^^^^^^^^^^^^^^^^^^^
-
-The new ASP.NET Core Module replaces the IIS Platform Handler for ASP.NET Core apps. You configure the ASP.NET Core Module in web.config like this (show web.config)
-
-
-The Publish IIS tool  can generate the correct ``web.config`` for you when you publish. See `<Publishing to IIS https://docs.asp.net/en/latest/publishing/iis.html>`_ for more details.
-
-The name of the package that contains the Publish IIS tool was changed to ``Microsoft.AspNetCore.Server.IISIntegration.Tools``. This requires changing your ``project.json`` file to inlude the ``Microsoft.AspNetCore.Server.IISIntegration.Tools`` package instead of the ``dotnet-publish-iis`` package.
-
-You can use the Publish IIS tool to publish your app with the ``web.config`` file that is required for your target environment. More information about Publish IIS changes is at `<https://github.com/aspnet/Announcements/issues/164>`_.
+The Publish IIS tool can generate the correct ``web.config`` for you when you publish. See :doc:/publishing/iis for more details.
 
 IIS integration middleware is now setup using ``WebHostBuilder`` in ``Program.Main()``, and is no longer called in the ``Configure()`` method of the ``Startup`` class. 
 
@@ -326,7 +297,7 @@ Configuration
 JSON configuration syntax change 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``ConfigurationRoot.ReloadOnChanged()`` is no longer available, add is added explicitly via ``ConfigurationBuilder.AddJsonFile()``.
+``ConfigurationRoot.ReloadOnChanged()`` is no longer available, it is added explicitly via ``ConfigurationBuilder.AddJsonFile()``.
 	   
 Logging
 -------
